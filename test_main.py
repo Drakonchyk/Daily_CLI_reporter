@@ -1,14 +1,16 @@
 import unittest
 from unittest.mock import patch
 from collections import defaultdict
-from datetime import datetime
-from main import get_time_entries, generate_report, format_time, print_report
+from datetime import datetime, timedelta
+from main import get_time_entries, generate_report, format_time, print_report, ensure_timezone_aware
+import pytz
 
 class TestClockifyReport(unittest.TestCase):
     """Unit tests for Clockify Report functionalities."""
 
     def setUp(self):
         """Set up common test data."""
+        self.utc = pytz.utc
         self.sample_time_entries = [
             {
                 "description": "Task 1",
@@ -64,11 +66,11 @@ class TestClockifyReport(unittest.TestCase):
 
         expected_report = defaultdict(lambda: defaultdict(list))
         expected_report[datetime(2023, 9, 5).date()]['Task 1'].append((
-            datetime(2023, 9, 5, 10, 0, 0),
+            datetime(2023, 9, 5, 10, 0, 0, tzinfo=self.utc),
             2 * 60 * 60
         ))
         expected_report[datetime(2023, 9, 5).date()]['Task 2'].append((
-            datetime(2023, 9, 5, 12, 30, 0),
+            datetime(2023, 9, 5, 12, 30, 0, tzinfo=self.utc),
             1.5 * 60 * 60
         ))
 
@@ -81,6 +83,16 @@ class TestClockifyReport(unittest.TestCase):
         self.assertEqual(format_time(3600), "1:00:00")
         self.assertEqual(format_time(3661), "1:01:01")
 
+    def test_ensure_timezone_aware(self):
+        """
+        Test ensure_timezone_aware correctly converts naive datetime to aware datetime.
+        """
+        naive_dt = datetime(2023, 9, 5, 10, 0, 0)
+        aware_dt = datetime(2023, 9, 5, 10, 0, 0, tzinfo=self.utc)
+
+        self.assertEqual(ensure_timezone_aware(naive_dt), aware_dt)
+        self.assertEqual(ensure_timezone_aware(None), datetime.min.replace(tzinfo=self.utc))
+
     @patch('builtins.print')
     def test_print_report(self, mock_print):
         """
@@ -88,7 +100,7 @@ class TestClockifyReport(unittest.TestCase):
         """
         report = defaultdict(lambda: defaultdict(list))
         report[datetime(2023, 9, 5).date()]['Task 1'].append((
-            datetime(2023, 9, 5, 10, 0, 0),
+            datetime(2023, 9, 5, 10, 0, 0, tzinfo=self.utc),
             2 * 60 * 60
         ))
         report[datetime(2023, 9, 5).date()]['Task 2'].append((

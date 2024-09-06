@@ -1,12 +1,11 @@
 # Daily_CLI_reporter
-# Clockify Time Entries Retrieval Script
 
 This Python script retrieves time entries for a specific user in a Clockify workspace using the Clockify API. It can be useful for tracking time logs and project activities programmatically.
 
 ## Features
 
 - Retrieve time entries for a specific user in a given workspace.
-- Prints the list of time entries with details like description, start/end time, and project info.
+- Prints the report of all dates with time entries with details like description, end time, time taken for completing the task and summary time of work during that date.
 - Basic error handling to help troubleshoot API issues.
   
 ## Prerequisites
@@ -20,8 +19,7 @@ This Python script retrieves time entries for a specific user in a Clockify work
 
 - Clone or Download the Repository:
   ```bash
-  git clone https://github.com/your-username/clockify-time-entries-script.git
-  cd clockify-time-entries-script
+  git clone https://github.com/Drakonchyk/Daily_CLI_reporter.git
 - Install Dependencies:
   ```bash
   pip install -r requirements.txt
@@ -46,7 +44,7 @@ Update the following constants with your API credentials:
 ### Run the Script:
 To run the script, navigate to the directory containing the script and execute the following command:
 ``` bash
-python script_name.py
+python main.py
 ```
 ### Example Output: 
 If successful, the script will output a list of time entries like this:

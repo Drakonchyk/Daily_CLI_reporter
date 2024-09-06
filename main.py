@@ -1,11 +1,11 @@
 import requests
 
 # Define the API token for authentication with Clockify API
-API_TOKEN = ''
+API_TOKEN = 'your_api_token_here'
 # The workspace ID where the time entries are stored
-WORKSPACE_ID = ''
+WORKSPACE_ID = 'your_workspace_id_here'
 # The user ID for which we are retrieving time entries
-USER_ID = ''
+USER_ID = 'your_user_id_here'
 # Base URL for Clockify's API
 BASE_URL = 'https://api.clockify.me/api/v1'
 

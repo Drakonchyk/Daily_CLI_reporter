@@ -86,6 +86,23 @@ def format_time(seconds):
     """
     return str(timedelta(seconds=int(seconds)))
 
+def ensure_timezone_aware(dt):
+    """
+    Converts a datetime object to timezone-aware using UTC if it's not already.
+    
+    Args:
+        dt (datetime): The datetime object.
+    
+    Returns:
+        datetime: A timezone-aware datetime object.
+    """
+    if dt is None:
+        return datetime.min.replace(tzinfo=pytz.utc)  # Ensure it's timezone-aware
+    
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=pytz.utc)  # Make it timezone-aware using UTC
+    return dt
+
 def print_report(report):
     """
     Prints the formatted report to the console, grouping by date and task.
@@ -104,7 +121,7 @@ def print_report(report):
             for task, entries in tasks.items() 
             for end_time, time_spent in entries
         ]
-        sorted_tasks = sorted(flat_tasks, key=lambda x: x[1] if x[1] else datetime.min)
+        sorted_tasks = sorted(flat_tasks, key=lambda x: ensure_timezone_aware(x[1]))
 
         for task, end_time, time_spent in sorted_tasks:
             if end_time:
@@ -115,6 +132,7 @@ def print_report(report):
 
         total_time_spent = sum([time for _, _, time in flat_tasks if time])
         print(f"Total time spent on {date}: {format_time(total_time_spent)}")
+
 
 if __name__ == '__main__':
     time_entries = get_time_entries()

@@ -1,6 +1,7 @@
-import requests
 from collections import defaultdict
 from datetime import datetime, timedelta
+import requests
+import pytz
 
 # Constants for Clockify API
 API_TOKEN = 'your_api_token_here'
@@ -12,6 +13,9 @@ HEADERS = {
     'X-Api-Key': API_TOKEN,
     'Content-Type': 'application/json'
 }
+
+# Set your local timezone here
+LOCAL_TIMEZONE = pytz.timezone('Europe/Kyiv')
 
 def get_time_entries():
     """
@@ -52,11 +56,18 @@ def generate_report(time_entries):
             continue
 
         try:
-            start_time = datetime.fromisoformat(start_time_str[:-1])
-            end_time = datetime.fromisoformat(end_time_str[:-1]) if end_time_str else None
-            time_spent = (end_time - start_time).total_seconds() if end_time else None
+            start_time = datetime.fromisoformat(start_time_str[:-1] + '+00:00').astimezone(pytz.utc)
+            start_time_local = start_time.astimezone(LOCAL_TIMEZONE)
 
-            report[start_time.date()][task_name].append((end_time, time_spent))
+            if end_time_str:
+                end_time = datetime.fromisoformat(end_time_str[:-1] + '+00:00').astimezone(pytz.utc)
+                end_time_local = end_time.astimezone(LOCAL_TIMEZONE)
+                time_spent = (end_time - start_time).total_seconds()
+            else:
+                end_time_local = None
+                time_spent = None
+
+            report[start_time_local.date()][task_name].append((end_time_local, time_spent))
 
         except ValueError as e:
             print(f"Error parsing dates for entry {entry}: {e}")

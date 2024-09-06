@@ -39,6 +39,10 @@ Update the following constants with your API credentials:
   WORKSPACE_ID = 'your_workspace_id_here'
   USER_ID = 'your_user_id_here'
   ```
+You may also update your time zone to get exact ending time of your tasks:
+  ```python
+  LOCAL_TIMEZONE = pytz.timezone('Europe/Kyiv')
+  ```
 
 ## Usage
 ### Run the Script:
@@ -47,16 +51,19 @@ To run the script, navigate to the directory containing the script and execute t
 python main.py
 ```
 ### Example Output: 
-If successful, the script will output a list of time entries like this:
+If successful, the script will output a report like this:
 ```plaintext
-Entry: {
-    "id": "5d7f9e9f9e9e9f0001",
-    "description": "Team meeting",
-    "start": "2024-09-06T09:00:00Z",
-    "end": "2024-09-06T10:00:00Z",
-    "projectId": "project_123",
-    ...
-}
+Summary Report:
+
+Date: 2024-09-06
+        Task: Task1
+        - Completed at: 15:25:25
+        - Time spent: 0:01:25
+        ---
+        Task: Task2
+        - Completed at: 15:25:31
+        - Time spent: 0:20:31
+        ---
 ```
 ### Error Handling:
 If there’s an issue with the request, such as an incorrect API token or user/workspace ID, an error message with the status code will be printed:

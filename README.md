@@ -4,7 +4,7 @@ This Python script retrieves time entries for a specific user in a Clockify work
 
 ## Features
 
-- Retrieve time entries for a specific user in a given workspace.
+- Retrieve all time entries for a specific user in a given workspace.
 - Prints the report of all dates with time entries with details like description, end time, time taken for completing the task and summary time of work during that date.
 - Basic error handling to help troubleshoot API issues.
   
